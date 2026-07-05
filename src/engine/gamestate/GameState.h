@@ -1,0 +1,49 @@
+#pragma once
+
+#include "../pieces/Piece.h"
+#include "../position/Position.h"
+
+class GameState
+{
+public:
+    GameState();
+
+    PieceColor getSideToMove() const;
+    void setSideToMove(PieceColor color);
+
+    bool canWhiteCastleKingSide() const;
+    bool canWhiteCastleQueenSide() const;
+    bool canBlackCastleKingSide() const;
+    bool canBlackCastleQueenSide() const;
+
+    void setWhiteCastleKingSide(bool value);
+    void setWhiteCastleQueenSide(bool value);
+    void setBlackCastleKingSide(bool value);
+    void setBlackCastleQueenSide(bool value);
+
+    bool hasEnPassant() const;
+    Position getEnPassantSquare() const;
+    void setEnPassantSquare(const Position& position);
+    void clearEnPassant();
+
+    int getHalfMoveClock() const;
+    void setHalfMoveClock(int value);
+
+    int getFullMoveNumber() const;
+    void setFullMoveNumber(int value);
+
+private:
+    PieceColor sideToMove;
+
+    bool whiteKingSideCastle;
+    bool whiteQueenSideCastle;
+
+    bool blackKingSideCastle;
+    bool blackQueenSideCastle;
+
+    bool enPassantAvailable;
+    Position enPassantSquare;
+
+    int halfMoveClock;
+    int fullMoveNumber;
+};
