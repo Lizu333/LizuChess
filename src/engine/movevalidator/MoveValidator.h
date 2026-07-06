@@ -44,4 +44,20 @@ private:
         const Position& square,
         PieceColor attackerColor
     ) const;
+
+    bool isSquareAttackedBySlidingPiece(
+        const Board& board,
+        const Position& square,
+        PieceColor attackerColor,
+        int dx,
+        int dy,
+        PieceType validType1,
+        PieceType validType2
+    ) const;
+
+    bool isSquareAttackedByKing(
+        const Board& board,
+        const Position& square,
+        PieceColor attackerColor
+    ) const;
 };

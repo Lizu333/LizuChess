@@ -58,6 +58,35 @@ bool MoveValidator::isKingInCheck(
     if (isSquareAttackedByPawn(board, kingPosition, attackerColor))
         return true;
 
+    //bishop/queen
+    if (isSquareAttackedBySlidingPiece(board, kingPosition, attackerColor, 1, 1, PieceType::Bishop, PieceType::Queen))
+        return true;
+
+    if (isSquareAttackedBySlidingPiece(board, kingPosition, attackerColor, 1, -1, PieceType::Bishop, PieceType::Queen))
+        return true;
+
+    if (isSquareAttackedBySlidingPiece(board, kingPosition, attackerColor, -1, 1, PieceType::Bishop, PieceType::Queen))
+        return true;
+
+    if (isSquareAttackedBySlidingPiece(board, kingPosition, attackerColor, -1, -1, PieceType::Bishop, PieceType::Queen))
+        return true;
+
+    //rook/queen
+    if (isSquareAttackedBySlidingPiece(board, kingPosition, attackerColor, 1, 0, PieceType::Rook, PieceType::Queen))
+        return true;
+
+    if (isSquareAttackedBySlidingPiece(board, kingPosition, attackerColor, -1, 0, PieceType::Rook, PieceType::Queen))
+        return true;
+
+    if (isSquareAttackedBySlidingPiece(board, kingPosition, attackerColor, 0, 1, PieceType::Rook, PieceType::Queen))
+        return true;
+
+    if (isSquareAttackedBySlidingPiece(board, kingPosition, attackerColor, 0, -1, PieceType::Rook, PieceType::Queen))
+        return true;
+
+    if (isSquareAttackedByKing(board, kingPosition, attackerColor))
+        return true;
+
     return false;
 }
 
@@ -160,6 +189,84 @@ bool MoveValidator::isSquareAttackedByPawn(
             continue;
 
         return true;
+    }
+
+    return false;
+}
+
+bool MoveValidator::isSquareAttackedBySlidingPiece(
+    const Board& board,
+    const Position& square,
+    PieceColor attackerColor,
+    int dx,
+    int dy,
+    PieceType validType1,
+    PieceType validType2
+) const
+{
+    int x = square.getX() + dx;
+    int y = square.getY() + dy;
+
+    while (true)
+    {
+        Position current(x, y);
+
+        if (!board.isInsideBoard(current))
+            break;
+
+        Piece piece = board.getPiece(current);
+
+        if (piece.isEmpty())
+        {
+            x += dx;
+            y += dy;
+            continue;
+        }
+
+        if (piece.getColor() != attackerColor)
+            return false;
+
+        return piece.getType() == validType1 ||
+            piece.getType() == validType2;
+    }
+
+    return false;
+}
+
+bool MoveValidator::isSquareAttackedByKing(
+    const Board& board,
+    const Position& square,
+    PieceColor attackerColor
+) const
+{
+    for (int dy = -1; dy <= 1; dy++)
+    {
+        for (int dx = -1; dx <= 1; dx++)
+        {
+            if (dx == 0 && dy == 0)
+                continue;
+
+            Position attackerPosition(
+                square.getX() + dx,
+                square.getY() + dy
+            );
+
+            if (!board.isInsideBoard(attackerPosition))
+                continue;
+
+            Piece piece = board.getPiece(attackerPosition);
+
+            if (piece.isEmpty())
+                continue;
+
+            if (piece.getColor() != attackerColor)
+                continue;
+
+            if (piece.getType() != PieceType::King)
+                continue;
+
+            return true;
+        }
     }
 
     return false;
