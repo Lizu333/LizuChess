@@ -1,8 +1,10 @@
 ﻿#pragma once
 
 #include <SFML/Graphics.hpp>
+#include <vector>
 
 #include "../graphics/Renderer.h"
+
 #include "../engine/chessengine/ChessEngine.h"
 #include "../engine/move/Move.h"
 #include "../engine/position/Position.h"
@@ -29,4 +31,6 @@ private:
 
     bool pieceSelected = false;
     Position selectedSquare;
+
+    std::vector<Position> highlightedSquares;
 };

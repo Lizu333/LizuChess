@@ -1,10 +1,10 @@
 ﻿#include "Renderer.h"
 
 #include <stdexcept>
+#include <string>
 
 #include "../engine/board/Board.h"
 #include "../engine/pieces/Piece.h"
-#include "../engine/position/Position.h"
 #include "../theme/ThemeManager.h"
 
 Renderer::Renderer()
@@ -15,9 +15,14 @@ Renderer::Renderer()
     }
 }
 
-void Renderer::draw(sf::RenderWindow& window, const Board& board)
+void Renderer::draw(
+    sf::RenderWindow& window,
+    const Board& board,
+    const std::vector<Position>& highlightedSquares
+)
 {
     drawBoard(window);
+    drawHighlights(window, highlightedSquares);
     drawPieces(window, board);
 }
 
@@ -34,7 +39,10 @@ void Renderer::drawBoard(sf::RenderWindow& window)
     {
         for (int x = 0; x < boardSize; x++)
         {
-            tile.setPosition({ x * tileSize, y * tileSize });
+            tile.setPosition({
+                x * tileSize,
+                y * tileSize
+                });
 
             tile.setFillColor(
                 ((x + y) % 2 == 0)
@@ -47,6 +55,29 @@ void Renderer::drawBoard(sf::RenderWindow& window)
     }
 }
 
+void Renderer::drawHighlights(
+    sf::RenderWindow& window,
+    const std::vector<Position>& highlightedSquares
+)
+{
+    constexpr float tileSize = 96.f;
+    constexpr float circleRadius = 14.f;
+
+    for (const Position& square : highlightedSquares)
+    {
+        sf::CircleShape circle(circleRadius);
+
+        circle.setFillColor(sf::Color(0, 180, 0, 160));
+
+        circle.setPosition({
+            square.getX() * tileSize + tileSize / 2.f - circleRadius,
+            square.getY() * tileSize + tileSize / 2.f - circleRadius
+            });
+
+        window.draw(circle);
+    }
+}
+
 void Renderer::drawPieces(sf::RenderWindow& window, const Board& board)
 {
     constexpr float tileSize = 96.f;
@@ -55,7 +86,8 @@ void Renderer::drawPieces(sf::RenderWindow& window, const Board& board)
     {
         for (int x = 0; x < 8; x++)
         {
-            Piece piece = board.getPiece(Position(x, y));
+            Position position(x, y);
+            Piece piece = board.getPiece(position);
 
             if (piece.isEmpty())
                 continue;
@@ -92,6 +124,7 @@ void Renderer::drawPieces(sf::RenderWindow& window, const Board& board)
             sf::Text text(font);
             text.setString(symbol);
             text.setCharacterSize(72);
+
             text.setFillColor(
                 piece.getColor() == PieceColor::White
                 ? sf::Color::White
