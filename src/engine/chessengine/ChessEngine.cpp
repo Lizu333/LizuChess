@@ -47,3 +47,29 @@ std::vector<Move> ChessEngine::generateLegalMoves() const
 
     return legalMoves;
 }
+
+bool ChessEngine::makeMove(const Move& move)
+{
+    std::vector<Move> legalMoves = generateLegalMoves();
+
+    for (const Move& legalMove : legalMoves)
+    {
+        if (legalMove.getFrom() == move.getFrom() &&
+            legalMove.getTo() == move.getTo())
+        {
+            board.makeMove(move);
+
+            PieceColor current = gameState.getSideToMove();
+
+            gameState.setSideToMove(
+                current == PieceColor::White
+                ? PieceColor::Black
+                : PieceColor::White
+            );
+
+            return true;
+        }
+    }
+
+    return false;
+}

@@ -23,6 +23,8 @@ public:
 
     std::vector<Move> generateLegalMoves() const;
 
+    bool makeMove(const Move& move);
+
 private:
     Board board;
     GameState gameState;
