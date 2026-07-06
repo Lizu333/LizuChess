@@ -12,5 +12,8 @@ public:
     void draw(sf::RenderWindow& window, const Board& board);
 
 private:
-    void drawBoard(sf::RenderWindow& window, const Board& board);
+    void drawBoard(sf::RenderWindow& window);
+    void drawPieces(sf::RenderWindow& window, const Board& board);
+
+    sf::Font font;
 };

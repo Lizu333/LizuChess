@@ -1,4 +1,5 @@
 ﻿#include "Game.h"
+
 #include "../theme/ThemeManager.h"
 
 Game::Game()
@@ -36,7 +37,7 @@ void Game::render()
 
     window.clear(theme.background);
 
-    renderer.draw(window, board);
+    renderer.draw(window, chessEngine.getBoard());
 
     window.display();
 }

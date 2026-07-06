@@ -10,6 +10,7 @@ public:
     Board();
 
     void reset();
+    void setupStartingPosition();
 
     bool isInsideBoard(const Position& position) const;
 
@@ -19,6 +20,8 @@ public:
     bool isSquareEmpty(const Position& position) const;
 
     void makeMove(const Move& move);
+
+    void printToConsole() const;
 
 private:
     Piece squares[8][8];
