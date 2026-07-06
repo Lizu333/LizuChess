@@ -15,11 +15,29 @@ public:
     void draw(
         sf::RenderWindow& window,
         const Board& board,
-        const std::vector<Position>& highlightedSquares
+        const std::vector<Position>& highlightedSquares,
+        bool pieceSelected,
+        const Position& selectedSquare,
+        bool hasLastMove,
+        const Position& lastMoveFrom,
+        const Position& lastMoveTo
     );
 
 private:
     void drawBoard(sf::RenderWindow& window);
+
+    void drawLastMove(
+        sf::RenderWindow& window,
+        bool hasLastMove,
+        const Position& from,
+        const Position& to
+    );
+
+    void drawSelectedSquare(
+        sf::RenderWindow& window,
+        bool pieceSelected,
+        const Position& selectedSquare
+    );
 
     void drawHighlights(
         sf::RenderWindow& window,

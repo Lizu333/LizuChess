@@ -33,7 +33,11 @@ void ThemeManager::setTheme(ThemeType type)
             sf::Color(120,180,255),
 
             sf::Color(45,45,45),
-            sf::Color::White
+            sf::Color::White,
+
+            sf::Color(255, 215, 0, 90),     // lastMoveHighlight
+            sf::Color(160, 80, 255, 220),   // selectedSquareBorder
+            sf::Color(0, 180, 0, 160),      // legalMoveHighlight
         };
 
         break;

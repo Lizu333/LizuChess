@@ -3,6 +3,7 @@
 #include "../board/Board.h"
 #include "../gamestate/GameState.h"
 #include "../move/Move.h"
+#include "../pieces/Piece.h"
 
 class MoveValidator
 {
@@ -13,5 +14,28 @@ public:
         const Board& board,
         const GameState& gameState,
         const Move& move
+    ) const;
+
+private:
+    bool leavesKingInCheck(
+        const Board& board,
+        const GameState& gameState,
+        const Move& move
+    ) const;
+
+    bool isKingInCheck(
+        const Board& board,
+        PieceColor color
+    ) const;
+
+    Position findKing(
+        const Board& board,
+        PieceColor color
+    ) const;
+
+    bool isSquareAttackedByKnight(
+        const Board& board,
+        const Position& square,
+        PieceColor attackerColor
     ) const;
 };

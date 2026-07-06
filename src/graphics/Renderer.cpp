@@ -18,13 +18,64 @@ Renderer::Renderer()
 void Renderer::draw(
     sf::RenderWindow& window,
     const Board& board,
-    const std::vector<Position>& highlightedSquares
+    const std::vector<Position>& highlightedSquares,
+    bool pieceSelected,
+    const Position& selectedSquare,
+    bool hasLastMove,
+    const Position& lastMoveFrom,
+    const Position& lastMoveTo
 )
 {
     drawBoard(window);
-    drawHighlights(window, highlightedSquares);
+
+    drawLastMove(
+        window,
+        hasLastMove,
+        lastMoveFrom,
+        lastMoveTo
+    );
+
+    drawSelectedSquare(
+        window,
+        pieceSelected,
+        selectedSquare
+    );
+
+    drawHighlights(
+        window,
+        highlightedSquares
+    );
+
     drawPieces(window, board);
 }
+
+void Renderer::drawSelectedSquare(
+    sf::RenderWindow& window,
+    bool pieceSelected,
+    const Position& selectedSquare
+)
+{
+    if (!pieceSelected)
+        return;
+
+    constexpr float tileSize = 96.f;
+
+    sf::RectangleShape border({ tileSize, tileSize });
+
+    border.setPosition({
+        selectedSquare.getX() * tileSize,
+        selectedSquare.getY() * tileSize
+        });
+
+    border.setFillColor(sf::Color::Transparent);
+    border.setOutlineThickness(-5.f);
+    const Theme& theme = ThemeManager::getTheme();
+    border.setOutlineColor(theme.selectedSquareBorder);
+
+    window.draw(border);
+}
+
+
 
 void Renderer::drawBoard(sf::RenderWindow& window)
 {
@@ -67,7 +118,8 @@ void Renderer::drawHighlights(
     {
         sf::CircleShape circle(circleRadius);
 
-        circle.setFillColor(sf::Color(0, 180, 0, 160));
+        const Theme& theme = ThemeManager::getTheme();
+        circle.setFillColor(theme.legalMoveHighlight);
 
         circle.setPosition({
             square.getX() * tileSize + tileSize / 2.f - circleRadius,
@@ -139,4 +191,36 @@ void Renderer::drawPieces(sf::RenderWindow& window, const Board& board)
             window.draw(text);
         }
     }
+}
+
+void Renderer::drawLastMove(
+    sf::RenderWindow& window,
+    bool hasLastMove,
+    const Position& from,
+    const Position& to
+)
+{
+    if (!hasLastMove)
+        return;
+
+    constexpr float tileSize = 96.f;
+
+    sf::RectangleShape highlight({ tileSize, tileSize });
+
+    const Theme& theme = ThemeManager::getTheme();
+    highlight.setFillColor(theme.lastMoveHighlight);
+
+    highlight.setPosition({
+        from.getX() * tileSize,
+        from.getY() * tileSize
+        });
+
+    window.draw(highlight);
+
+    highlight.setPosition({
+        to.getX() * tileSize,
+        to.getY() * tileSize
+        });
+
+    window.draw(highlight);
 }

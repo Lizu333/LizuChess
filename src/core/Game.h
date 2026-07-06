@@ -33,4 +33,8 @@ private:
     Position selectedSquare;
 
     std::vector<Position> highlightedSquares;
+
+    bool hasLastMove = false;
+    Position lastMoveFrom;
+    Position lastMoveTo;
 };

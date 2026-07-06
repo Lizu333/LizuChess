@@ -54,7 +54,12 @@ void Game::render()
     renderer.draw(
         window,
         chessEngine.getBoard(),
-        highlightedSquares
+        highlightedSquares,
+        pieceSelected,
+        selectedSquare,
+        hasLastMove,
+        lastMoveFrom,
+        lastMoveTo
     );
 
     window.display();
@@ -108,6 +113,10 @@ void Game::handleMouseClick(int mouseX, int mouseY)
         {
             pieceSelected = false;
             highlightedSquares.clear();
+
+            hasLastMove = true;
+            lastMoveFrom = move.getFrom();
+            lastMoveTo = move.getTo();
         }
 
         return;
