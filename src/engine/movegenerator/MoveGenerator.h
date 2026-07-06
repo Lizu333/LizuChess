@@ -60,4 +60,12 @@ private:
         const Board& board,
         const GameState& gameState,
         std::vector<Move>& moves) const;
+
+    void addSlidingMoves(
+        const Board& board,
+        const GameState& gameState,
+        std::vector<Move>& moves,
+        const Position& from,
+        int dx,
+        int dy) const;
 };
