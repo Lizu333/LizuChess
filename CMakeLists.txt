@@ -12,7 +12,7 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
 )
 
-add_executable(LizuChess ${SOURCES} "src/engine/movegenerator/MoveGeneratorPawns.cpp" "src/engine/movegenerator/MoveGeneratorKnights.cpp" "src/engine/movegenerator/MoveGeneratorSliding.cpp" "src/engine/movegenerator/MoveGeneratorKing.cpp" "src/engine/movegenerator/MoveGeneratorBishop.cpp" "src/engine/movegenerator/MoveGeneratorRook.cpp" "src/engine/movegenerator/MoveGeneratorQueen.cpp")
+add_executable(LizuChess ${SOURCES} "src/engine/movegenerator/MoveGeneratorPawns.cpp" "src/engine/movegenerator/MoveGeneratorKnights.cpp" "src/engine/movegenerator/MoveGeneratorSliding.cpp" "src/engine/movegenerator/MoveGeneratorKing.cpp" "src/engine/movegenerator/MoveGeneratorBishop.cpp" "src/engine/movegenerator/MoveGeneratorRook.cpp" "src/engine/movegenerator/MoveGeneratorQueen.cpp" "src/engine/attackdetector/AttackDetector.cpp" "src/engine/attackdetector/AttackDetector.h")
 
 target_include_directories(LizuChess PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/src"

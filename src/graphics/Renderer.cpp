@@ -58,6 +58,8 @@ void Renderer::drawSelectedSquare(
     if (!pieceSelected)
         return;
 
+    const Theme& theme = ThemeManager::getTheme();
+
     constexpr float tileSize = 96.f;
 
     sf::RectangleShape border({ tileSize, tileSize });
@@ -68,13 +70,11 @@ void Renderer::drawSelectedSquare(
         });
 
     border.setFillColor(sf::Color::Transparent);
-    border.setOutlineThickness(-5.f);
-    const Theme& theme = ThemeManager::getTheme();
+    border.setOutlineThickness(-6.f);
     border.setOutlineColor(theme.selectedSquareBorder);
 
     window.draw(border);
 }
-
 
 
 void Renderer::drawBoard(sf::RenderWindow& window)
@@ -112,7 +112,7 @@ void Renderer::drawHighlights(
 )
 {
     constexpr float tileSize = 96.f;
-    constexpr float circleRadius = 14.f;
+    constexpr float circleRadius = 18.f;
 
     for (const Position& square : highlightedSquares)
     {
