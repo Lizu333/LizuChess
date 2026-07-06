@@ -47,7 +47,16 @@ bool MoveValidator::isKingInCheck(
     if (kingPosition.getX() == -1)
         return false;
 
-    //ide ellenfel tamadasanak vizsgalatai kesobb
+    PieceColor attackerColor =
+        (color == PieceColor::White)
+        ? PieceColor::Black
+        : PieceColor::White;
+
+    if (isSquareAttackedByKnight(board, kingPosition, attackerColor))
+        return true;
+
+    if (isSquareAttackedByPawn(board, kingPosition, attackerColor))
+        return true;
 
     return false;
 }
@@ -79,4 +88,79 @@ Position MoveValidator::findKing(
     }
 
     return Position(-1, -1);
+}
+
+bool MoveValidator::isSquareAttackedByKnight(
+    const Board& board,
+    const Position& square,
+    PieceColor attackerColor
+) const
+{
+    const int offsetX[8] = { 1, 2, 2, 1, -1, -2, -2, -1 };
+    const int offsetY[8] = { -2, -1, 1, 2, 2, 1, -1, -2 };
+
+    for (int i = 0; i < 8; i++)
+    {
+        Position attackerPosition(
+            square.getX() + offsetX[i],
+            square.getY() + offsetY[i]
+        );
+
+        if (!board.isInsideBoard(attackerPosition))
+            continue;
+
+        Piece piece = board.getPiece(attackerPosition);
+
+        if (piece.isEmpty())
+            continue;
+
+        if (piece.getColor() != attackerColor)
+            continue;
+
+        if (piece.getType() != PieceType::Knight)
+            continue;
+
+        return true;
+    }
+
+    return false;
+}
+
+
+bool MoveValidator::isSquareAttackedByPawn(
+    const Board& board,
+    const Position& square,
+    PieceColor attackerColor
+) const
+{
+    int direction =
+        (attackerColor == PieceColor::White) ? 1 : -1;
+
+    const int offsets[2] = { -1, 1 };
+
+    for (int dx : offsets)
+    {
+        Position attackerPosition(
+            square.getX() + dx,
+            square.getY() + direction
+        );
+
+        if (!board.isInsideBoard(attackerPosition))
+            continue;
+
+        Piece piece = board.getPiece(attackerPosition);
+
+        if (piece.isEmpty())
+            continue;
+
+        if (piece.getColor() != attackerColor)
+            continue;
+
+        if (piece.getType() != PieceType::Pawn)
+            continue;
+
+        return true;
+    }
+
+    return false;
 }

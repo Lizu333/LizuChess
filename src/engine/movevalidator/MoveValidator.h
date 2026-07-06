@@ -38,4 +38,10 @@ private:
         const Position& square,
         PieceColor attackerColor
     ) const;
+
+    bool isSquareAttackedByPawn(
+        const Board& board,
+        const Position& square,
+        PieceColor attackerColor
+    ) const;
 };
