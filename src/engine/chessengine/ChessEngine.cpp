@@ -73,3 +73,20 @@ bool ChessEngine::makeMove(const Move& move)
 
     return false;
 }
+
+std::vector<Move> ChessEngine::getMovesForPiece(
+    const Position& position) const
+{
+    std::vector<Move> allMoves = generateLegalMoves();
+    std::vector<Move> pieceMoves;
+
+    for (const Move& move : allMoves)
+    {
+        if (move.getFrom() == position)
+        {
+            pieceMoves.push_back(move);
+        }
+    }
+
+    return pieceMoves;
+}

@@ -72,15 +72,43 @@ void Game::handleMouseClick(int mouseX, int mouseY)
     if (!chessEngine.getBoard().isInsideBoard(clickedSquare))
         return;
 
-    // Második kattintás -> lépés
+        //masodik kattintasra lepes
     if (pieceSelected)
     {
+        Piece clickedPiece =
+            chessEngine.getBoard().getPiece(clickedSquare);
+
+        if (!clickedPiece.isEmpty() &&
+            clickedPiece.getColor() ==
+            chessEngine.getGameState().getSideToMove())
+        {
+            selectedSquare = clickedSquare;
+
+            highlightedSquares.clear();
+
+            std::vector<Move> moves =
+                chessEngine.generateLegalMoves();
+
+            for (const Move& move : moves)
+            {
+                if (move.getFrom() == selectedSquare)
+                {
+                    highlightedSquares.push_back(move.getTo());
+                }
+            }
+
+            return;
+        }
+
         Move move(selectedSquare, clickedSquare);
 
-        chessEngine.makeMove(move);
+        bool moveWasMade = chessEngine.makeMove(move);
 
-        pieceSelected = false;
-        highlightedSquares.clear();
+        if (moveWasMade)
+        {
+            pieceSelected = false;
+            highlightedSquares.clear();
+        }
 
         return;
     }
@@ -101,13 +129,10 @@ void Game::handleMouseClick(int mouseX, int mouseY)
     highlightedSquares.clear();
 
     std::vector<Move> moves =
-        chessEngine.generateLegalMoves();
+        chessEngine.getMovesForPiece(selectedSquare);
 
     for (const Move& move : moves)
     {
-        if (move.getFrom() == selectedSquare)
-        {
-            highlightedSquares.push_back(move.getTo());
-        }
+        highlightedSquares.push_back(move.getTo());
     }
 }

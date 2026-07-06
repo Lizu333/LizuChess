@@ -22,6 +22,7 @@ public:
     void resetGame();
 
     std::vector<Move> generateLegalMoves() const;
+    std::vector<Move> getMovesForPiece(const Position& position) const;
 
     bool makeMove(const Move& move);
 
