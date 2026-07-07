@@ -47,6 +47,39 @@ void Game::update()
 
 void Game::render()
 {
+    std::string title = "LizuChess - ";
+
+    if (chessEngine.isCheckmate())
+    {
+        title += "Checkmate";
+    }
+    else if (chessEngine.isStalemate())
+    {
+        title += "Stalemate";
+    }
+    else
+    {
+        if (chessEngine.getGameState().getSideToMove() == PieceColor::White)
+        {
+            title += "White";
+        }
+        else
+        {
+            title += "Black";
+        }
+
+        if (chessEngine.isCurrentSideInCheck())
+        {
+            title += " is in check";
+        }
+        else
+        {
+            title += " to move";
+        }
+    }
+
+    window.setTitle(title);
+
     const Theme& theme = ThemeManager::getTheme();
 
     window.clear(theme.background);
@@ -67,6 +100,9 @@ void Game::render()
 
 void Game::handleMouseClick(int mouseX, int mouseY)
 {
+    if (chessEngine.isGameOver())
+        return;
+
     constexpr float tileSize = 96.f;
 
     int boardX = static_cast<int>(mouseX / tileSize);

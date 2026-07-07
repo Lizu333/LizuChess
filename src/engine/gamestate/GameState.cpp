@@ -2,10 +2,10 @@
 
 GameState::GameState()
     : sideToMove(PieceColor::White),
-    whiteKingSideCastle(true),
-    whiteQueenSideCastle(true),
-    blackKingSideCastle(true),
-    blackQueenSideCastle(true),
+    whiteCastleKingSide(true),
+    whiteCastleQueenSide(true),
+    blackCastleKingSide(true),
+    blackCastleQueenSide(true),
     enPassantAvailable(false),
     enPassantSquare(-1, -1),
     halfMoveClock(0),
@@ -23,47 +23,55 @@ void GameState::setSideToMove(PieceColor color)
     sideToMove = color;
 }
 
+void GameState::switchSideToMove()
+{
+    sideToMove =
+        (sideToMove == PieceColor::White)
+        ? PieceColor::Black
+        : PieceColor::White;
+}
+
 bool GameState::canWhiteCastleKingSide() const
 {
-    return whiteKingSideCastle;
+    return whiteCastleKingSide;
 }
 
 bool GameState::canWhiteCastleQueenSide() const
 {
-    return whiteQueenSideCastle;
+    return whiteCastleQueenSide;
 }
 
 bool GameState::canBlackCastleKingSide() const
 {
-    return blackKingSideCastle;
+    return blackCastleKingSide;
 }
 
 bool GameState::canBlackCastleQueenSide() const
 {
-    return blackQueenSideCastle;
+    return blackCastleQueenSide;
 }
 
 void GameState::setWhiteCastleKingSide(bool value)
 {
-    whiteKingSideCastle = value;
+    whiteCastleKingSide = value;
 }
 
 void GameState::setWhiteCastleQueenSide(bool value)
 {
-    whiteQueenSideCastle = value;
+    whiteCastleQueenSide = value;
 }
 
 void GameState::setBlackCastleKingSide(bool value)
 {
-    blackKingSideCastle = value;
+    blackCastleKingSide = value;
 }
 
 void GameState::setBlackCastleQueenSide(bool value)
 {
-    blackQueenSideCastle = value;
+    blackCastleQueenSide = value;
 }
 
-bool GameState::hasEnPassant() const
+bool GameState::hasEnPassantSquare() const
 {
     return enPassantAvailable;
 }
@@ -79,9 +87,10 @@ void GameState::setEnPassantSquare(const Position& position)
     enPassantSquare = position;
 }
 
-void GameState::clearEnPassant()
+void GameState::clearEnPassantSquare()
 {
     enPassantAvailable = false;
+    enPassantSquare = Position(-1, -1);
 }
 
 int GameState::getHalfMoveClock() const

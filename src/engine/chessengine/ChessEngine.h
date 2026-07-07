@@ -5,6 +5,8 @@
 #include "../board/Board.h"
 #include "../gamestate/GameState.h"
 #include "../move/Move.h"
+#include "../position/Position.h"
+#include "../pieces/Piece.h"
 #include "../movegenerator/MoveGenerator.h"
 #include "../movevalidator/MoveValidator.h"
 
@@ -26,9 +28,20 @@ public:
 
     bool makeMove(const Move& move);
 
+    bool isCurrentSideInCheck() const;
+
+    bool hasLegalMoves() const;
+    bool isGameOver() const;
+
+    bool isCheckmate() const;
+    bool isStalemate() const;
+
+    void updateCastlingRights(const Move& move);
+
 private:
     Board board;
     GameState gameState;
+
     MoveGenerator moveGenerator;
     MoveValidator moveValidator;
 };

@@ -120,3 +120,17 @@ void Board::printToConsole() const
         std::cout << '\n';
     }
 }
+
+void Board::setupCheckTestPosition()
+{
+    reset();
+
+    // White king
+    setPiece(Position(4, 7), Piece(PieceType::King, PieceColor::White));
+
+    // Black king
+    setPiece(Position(4, 0), Piece(PieceType::King, PieceColor::Black));
+
+    // Black rook gives check on white king
+    setPiece(Position(4, 3), Piece(PieceType::Rook, PieceColor::Black));
+}

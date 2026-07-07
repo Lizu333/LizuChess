@@ -27,7 +27,8 @@ const GameState& ChessEngine::getGameState() const
 
 void ChessEngine::resetGame()
 {
-    board.setupStartingPosition();
+    (board.setupStartingPosition()); //feher kiraly sakkban teszteleshez: board.setupCheckTestPosition();
+    gameState = GameState();
 }
 
 std::vector<Move> ChessEngine::generateLegalMoves() const
@@ -57,15 +58,13 @@ bool ChessEngine::makeMove(const Move& move)
         if (legalMove.getFrom() == move.getFrom() &&
             legalMove.getTo() == move.getTo())
         {
+
+            updateCastlingRights(move);
             board.makeMove(move);
 
             PieceColor current = gameState.getSideToMove();
 
-            gameState.setSideToMove(
-                current == PieceColor::White
-                ? PieceColor::Black
-                : PieceColor::White
-            );
+            gameState.switchSideToMove();
 
             return true;
         }
@@ -89,4 +88,83 @@ std::vector<Move> ChessEngine::getMovesForPiece(
     }
 
     return pieceMoves;
+}
+
+bool ChessEngine::isCurrentSideInCheck() const
+{
+    return moveValidator.isKingInCheck(
+        board,
+        gameState.getSideToMove()
+    );
+}
+
+
+bool ChessEngine::hasLegalMoves() const
+{
+    return !generateLegalMoves().empty();
+}
+
+bool ChessEngine::isGameOver() const
+{
+    return !hasLegalMoves();
+}
+
+bool ChessEngine::isCheckmate() const
+{
+    return isCurrentSideInCheck() &&
+        generateLegalMoves().empty();
+}
+
+bool ChessEngine::isStalemate() const
+{
+    return !isCurrentSideInCheck() &&
+        generateLegalMoves().empty();
+}
+
+void ChessEngine::updateCastlingRights(const Move& move)
+{
+    Piece movingPiece = board.getPiece(move.getFrom());
+
+    if (movingPiece.isEmpty())
+        return;
+
+    Position from = move.getFrom();
+
+    //ha a feher kiraly lep, elvesziti mindket sancolasi jogat
+    if (movingPiece.getType() == PieceType::King &&
+        movingPiece.getColor() == PieceColor::White)
+    {
+        gameState.setWhiteCastleKingSide(false);
+        gameState.setWhiteCastleQueenSide(false);
+    }
+
+    //ha a fekete kiraly lep, elvesziti mindket sancolasi jogat
+    if (movingPiece.getType() == PieceType::King &&
+        movingPiece.getColor() == PieceColor::Black)
+    {
+        gameState.setBlackCastleKingSide(false);
+        gameState.setBlackCastleQueenSide(false);
+    }
+
+    //feher bastyak
+    if (movingPiece.getType() == PieceType::Rook &&
+        movingPiece.getColor() == PieceColor::White)
+    {
+        if (from == Position(0, 7))
+            gameState.setWhiteCastleQueenSide(false);
+
+        if (from == Position(7, 7))
+            gameState.setWhiteCastleKingSide(false);
+    }
+
+    //fekete bastyak
+    if (movingPiece.getType() == PieceType::Rook &&
+        movingPiece.getColor() == PieceColor::Black)
+    {
+        if (from == Position(0, 0))
+            gameState.setBlackCastleQueenSide(false);
+
+        if (from == Position(7, 0))
+            gameState.setBlackCastleKingSide(false);
+    }
 }

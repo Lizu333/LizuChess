@@ -18,16 +18,17 @@ public:
         const Move& move
     ) const;
 
+    //isKingInCheck privatbol public a 3. verzio kiadasa utan
+    bool isKingInCheck(
+        const Board& board,
+        PieceColor color
+    ) const;
+
 private:
     bool leavesKingInCheck(
         const Board& board,
         const GameState& gameState,
         const Move& move
-    ) const;
-
-    bool isKingInCheck(
-        const Board& board,
-        PieceColor color
     ) const;
 
     Position findKing(

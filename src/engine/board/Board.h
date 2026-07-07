@@ -23,6 +23,8 @@ public:
 
     void printToConsole() const;
 
+    void setupCheckTestPosition();
+
 private:
     Piece squares[8][8];
 };

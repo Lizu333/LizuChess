@@ -10,6 +10,7 @@ public:
 
     PieceColor getSideToMove() const;
     void setSideToMove(PieceColor color);
+    void switchSideToMove();
 
     bool canWhiteCastleKingSide() const;
     bool canWhiteCastleQueenSide() const;
@@ -21,10 +22,10 @@ public:
     void setBlackCastleKingSide(bool value);
     void setBlackCastleQueenSide(bool value);
 
-    bool hasEnPassant() const;
+    bool hasEnPassantSquare() const;
     Position getEnPassantSquare() const;
     void setEnPassantSquare(const Position& position);
-    void clearEnPassant();
+    void clearEnPassantSquare();
 
     int getHalfMoveClock() const;
     void setHalfMoveClock(int value);
@@ -35,11 +36,10 @@ public:
 private:
     PieceColor sideToMove;
 
-    bool whiteKingSideCastle;
-    bool whiteQueenSideCastle;
-
-    bool blackKingSideCastle;
-    bool blackQueenSideCastle;
+    bool whiteCastleKingSide;
+    bool whiteCastleQueenSide;
+    bool blackCastleKingSide;
+    bool blackCastleQueenSide;
 
     bool enPassantAvailable;
     Position enPassantSquare;
