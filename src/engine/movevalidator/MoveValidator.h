@@ -36,6 +36,17 @@ private:
         PieceColor color
     ) const;
 
+    bool isCastlingMove(
+        const Board& board,
+        const Move& move
+    ) const;
+
+    bool isCastlingLegal(
+        const Board& board,
+        const GameState& gameState,
+        const Move& move
+    ) const;
+
 private:
     AttackDetector attackDetector;
 };

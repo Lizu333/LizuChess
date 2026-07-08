@@ -25,6 +25,10 @@ public:
 
     void setupCheckTestPosition();
 
+    void setupCastlingTestPosition();
+
+    void setupEnPassantTestPosition();
+
 private:
     Piece squares[8][8];
 };

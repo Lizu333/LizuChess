@@ -48,3 +48,52 @@ void MoveGenerator::generateKingMoves(
         }
     }
 }
+
+void MoveGenerator::generateCastlingMoves(
+    const Board& board,
+    const GameState& gameState,
+    std::vector<Move>& moves
+) const
+{
+    PieceColor sideToMove = gameState.getSideToMove();
+
+    if (sideToMove == PieceColor::White)
+    {
+        Position kingFrom(4, 7);
+
+        if (gameState.canWhiteCastleKingSide() &&
+            board.isSquareEmpty(Position(5, 7)) &&
+            board.isSquareEmpty(Position(6, 7)))
+        {
+            moves.emplace_back(kingFrom, Position(6, 7));
+        }
+
+        if (gameState.canWhiteCastleQueenSide() &&
+            board.isSquareEmpty(Position(1, 7)) &&
+            board.isSquareEmpty(Position(2, 7)) &&
+            board.isSquareEmpty(Position(3, 7)))
+        {
+            moves.emplace_back(kingFrom, Position(2, 7));
+        }
+    }
+
+    if (sideToMove == PieceColor::Black)
+    {
+        Position kingFrom(4, 0);
+
+        if (gameState.canBlackCastleKingSide() &&
+            board.isSquareEmpty(Position(5, 0)) &&
+            board.isSquareEmpty(Position(6, 0)))
+        {
+            moves.emplace_back(kingFrom, Position(6, 0));
+        }
+
+        if (gameState.canBlackCastleQueenSide() &&
+            board.isSquareEmpty(Position(1, 0)) &&
+            board.isSquareEmpty(Position(2, 0)) &&
+            board.isSquareEmpty(Position(3, 0)))
+        {
+            moves.emplace_back(kingFrom, Position(2, 0));
+        }
+    }
+}

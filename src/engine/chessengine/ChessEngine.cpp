@@ -27,7 +27,11 @@ const GameState& ChessEngine::getGameState() const
 
 void ChessEngine::resetGame()
 {
-    (board.setupStartingPosition()); //feher kiraly sakkban teszteleshez: board.setupCheckTestPosition();
+    board.setupStartingPosition();
+    //feher kiraly sakkban teszteleshez: board.setupCheckTestPosition(); 
+    //sancolas tesztallasahoz: board.setupCastlingTestPosition(); 
+    //enpassant tesztallashoz: board.setupEnPassantTestPosition();
+    //alap: board.setupStartingPosition();
     gameState = GameState();
 }
 
@@ -60,6 +64,27 @@ bool ChessEngine::makeMove(const Move& move)
         {
 
             updateCastlingRights(move);
+
+            //ha gyalog 2t lep akkor az lesz az en passant mezo ami mogotte van
+            Piece movingPiece = board.getPiece(move.getFrom());
+
+            gameState.clearEnPassantSquare();
+
+            if (movingPiece.getType() == PieceType::Pawn)
+            {
+                int deltaY = move.getTo().getY() - move.getFrom().getY();
+
+                if (deltaY == 2 || deltaY == -2)
+                {
+                    int enPassantY =
+                        (move.getFrom().getY() + move.getTo().getY()) / 2;
+
+                    gameState.setEnPassantSquare(
+                        Position(move.getFrom().getX(), enPassantY)
+                    );
+                }
+            }
+
             board.makeMove(move);
 
             PieceColor current = gameState.getSideToMove();

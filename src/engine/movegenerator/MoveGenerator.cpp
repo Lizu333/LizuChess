@@ -4,9 +4,11 @@ MoveGenerator::MoveGenerator()
 {
 }
 
+
 std::vector<Move> MoveGenerator::generateMoves(
     const Board& board,
-    const GameState& gameState) const
+    const GameState& gameState
+) const
 {
     std::vector<Move> moves;
 
@@ -16,6 +18,7 @@ std::vector<Move> MoveGenerator::generateMoves(
     generateRookMoves(board, gameState, moves);
     generateQueenMoves(board, gameState, moves);
     generateKingMoves(board, gameState, moves);
+    generateCastlingMoves(board, gameState, moves);
 
     return moves;
 }

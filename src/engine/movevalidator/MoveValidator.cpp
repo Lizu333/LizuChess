@@ -18,6 +18,12 @@ bool MoveValidator::isMoveLegal(
     if (movingPiece.getColor() != gameState.getSideToMove())
         return false;
 
+    if (isCastlingMove(board, move))
+    {
+        if (!isCastlingLegal(board, gameState, move))
+            return false;
+    }
+
     return !leavesKingInCheck(board, gameState, move);
 }
 
@@ -85,4 +91,54 @@ Position MoveValidator::findKing(
     }
 
     return Position(-1, -1);
+}
+
+bool MoveValidator::isCastlingMove(
+    const Board& board,
+    const Move& move
+) const
+{
+    Piece piece = board.getPiece(move.getFrom());
+
+    if (piece.isEmpty())
+        return false;
+
+    if (piece.getType() != PieceType::King)
+        return false;
+
+    int dx = move.getTo().getX() - move.getFrom().getX();
+
+    return dx == 2 || dx == -2;
+}
+
+bool MoveValidator::isCastlingLegal(
+    const Board& board,
+    const GameState& gameState,
+    const Move& move
+) const
+{
+    PieceColor kingColor = gameState.getSideToMove();
+
+    Position from = move.getFrom();
+    Position to = move.getTo();
+
+    PieceColor enemyColor =
+        (kingColor == PieceColor::White)
+        ? PieceColor::Black
+        : PieceColor::White;
+
+    if (attackDetector.isSquareAttacked(board, from, enemyColor))
+        return false;
+
+    int direction = (to.getX() > from.getX()) ? 1 : -1;
+
+    Position passingSquare(from.getX() + direction, from.getY());
+
+    if (attackDetector.isSquareAttacked(board, passingSquare, enemyColor))
+        return false;
+
+    if (attackDetector.isSquareAttacked(board, to, enemyColor))
+        return false;
+
+    return true;
 }
