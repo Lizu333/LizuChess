@@ -29,6 +29,8 @@ public:
 
     void setupEnPassantTestPosition();
 
+    void setupPromotionTestPosition();
+
 private:
     Piece squares[8][8];
 };

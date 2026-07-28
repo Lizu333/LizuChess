@@ -132,6 +132,19 @@ void Board::makeMove(const Move& move)
         );
     }
 
+    if (move.getType() == MoveType::Promotion)
+    {
+        Piece promotedPiece(
+            move.getPromotionPiece(),
+            piece.getColor()
+        );
+
+        setPiece(move.getTo(), promotedPiece);
+        setPiece(move.getFrom(), Piece());
+
+        return;
+    }
+
     setPiece(move.getTo(), piece);
     setPiece(move.getFrom(), Piece());
 }
@@ -221,4 +234,25 @@ void Board::setupEnPassantTestPosition()
 
     //feketegyalog
     setPiece(Position(5, 1), Piece(PieceType::Pawn, PieceColor::Black));
+}
+
+
+void Board::setupPromotionTestPosition()
+{
+    reset();
+
+    setPiece(
+        Position(4, 7),
+        Piece(PieceType::King, PieceColor::White)
+    );
+
+    setPiece(
+        Position(4, 0),
+        Piece(PieceType::King, PieceColor::Black)
+    );
+
+    setPiece(
+        Position(0, 1),
+        Piece(PieceType::Pawn, PieceColor::White)
+    );
 }

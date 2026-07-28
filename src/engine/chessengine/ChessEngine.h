@@ -9,6 +9,7 @@
 #include "../pieces/Piece.h"
 #include "../movegenerator/MoveGenerator.h"
 #include "../movevalidator/MoveValidator.h"
+#include "../history/MoveHistory.h"
 
 class ChessEngine
 {
@@ -38,10 +39,14 @@ public:
 
     void updateCastlingRights(const Move& move);
 
+    MoveHistory& getMoveHistory();
+    const MoveHistory& getMoveHistory() const;
+
 private:
     Board board;
     GameState gameState;
 
     MoveGenerator moveGenerator;
     MoveValidator moveValidator;
+    MoveHistory moveHistory;
 };

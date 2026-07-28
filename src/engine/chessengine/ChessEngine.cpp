@@ -27,12 +27,15 @@ const GameState& ChessEngine::getGameState() const
 
 void ChessEngine::resetGame()
 {
-    board.setupStartingPosition();
+    board.setupStartingPosition();;
+    //alapallas:  board.setupStartingPosition();
     //feher kiraly sakkban teszteleshez: board.setupCheckTestPosition(); 
     //sancolas tesztallasahoz: board.setupCastlingTestPosition(); 
     //enpassant tesztallashoz: board.setupEnPassantTestPosition();
     //alap: board.setupStartingPosition();
+    //gyaloglepesek tesztallashoz: board.setupPromotionTestPosition();
     gameState = GameState();
+    moveHistory.clear();
 }
 
 std::vector<Move> ChessEngine::generateLegalMoves() const
@@ -55,44 +58,60 @@ std::vector<Move> ChessEngine::generateLegalMoves() const
 
 bool ChessEngine::makeMove(const Move& move)
 {
-    std::vector<Move> legalMoves = generateLegalMoves();
+    const std::vector<Move> legalMoves = generateLegalMoves();
 
     for (const Move& legalMove : legalMoves)
     {
-        if (legalMove.getFrom() == move.getFrom() &&
-            legalMove.getTo() == move.getTo())
+        const bool sameCoordinates =
+            legalMove.getFrom() == move.getFrom() &&
+            legalMove.getTo() == move.getTo();
+
+        if (!sameCoordinates)
+            continue;
+
+        //while promoting, the type of the chosen piece must be the same
+        if (legalMove.getType() == MoveType::Promotion)
         {
+            if (move.getType() != MoveType::Promotion)
+                continue;
 
-            updateCastlingRights(move);
-
-            //ha gyalog 2t lep akkor az lesz az en passant mezo ami mogotte van
-            Piece movingPiece = board.getPiece(move.getFrom());
-
-            gameState.clearEnPassantSquare();
-
-            if (movingPiece.getType() == PieceType::Pawn)
-            {
-                int deltaY = move.getTo().getY() - move.getFrom().getY();
-
-                if (deltaY == 2 || deltaY == -2)
-                {
-                    int enPassantY =
-                        (move.getFrom().getY() + move.getTo().getY()) / 2;
-
-                    gameState.setEnPassantSquare(
-                        Position(move.getFrom().getX(), enPassantY)
-                    );
-                }
-            }
-
-            board.makeMove(move);
-
-            PieceColor current = gameState.getSideToMove();
-
-            gameState.switchSideToMove();
-
-            return true;
+            if (legalMove.getPromotionPiece() != move.getPromotionPiece())
+                continue;
         }
+
+        updateCastlingRights(legalMove);
+
+        const Piece movingPiece =
+            board.getPiece(legalMove.getFrom());
+
+        gameState.clearEnPassantSquare();
+
+        if (movingPiece.getType() == PieceType::Pawn)
+        {
+            const int deltaY =
+                legalMove.getTo().getY() -
+                legalMove.getFrom().getY();
+
+            if (deltaY == 2 || deltaY == -2)
+            {
+                const int enPassantY =
+                    (legalMove.getFrom().getY() +
+                        legalMove.getTo().getY()) / 2;
+
+                gameState.setEnPassantSquare(
+                    Position(
+                        legalMove.getFrom().getX(),
+                        enPassantY
+                    )
+                );
+            }
+        }
+
+        board.makeMove(legalMove);
+        moveHistory.addMove(legalMove);
+        gameState.switchSideToMove();
+
+        return true;
     }
 
     return false;
@@ -192,4 +211,14 @@ void ChessEngine::updateCastlingRights(const Move& move)
         if (from == Position(7, 0))
             gameState.setBlackCastleKingSide(false);
     }
+}
+
+MoveHistory& ChessEngine::getMoveHistory()
+{
+    return moveHistory;
+}
+
+const MoveHistory& ChessEngine::getMoveHistory() const
+{
+    return moveHistory;
 }

@@ -2,9 +2,9 @@
 
 #include <vector>
 
-#include "../move/Move.h"
 #include "../board/Board.h"
 #include "../gamestate/GameState.h"
+#include "../move/Move.h"
 #include "../position/Position.h"
 
 class MoveGenerator
@@ -18,6 +18,7 @@ public:
     ) const;
 
 private:
+    // Pawn moves
     void generatePawnMoves(
         const Board& board,
         const GameState& gameState,
@@ -42,30 +43,47 @@ private:
         std::vector<Move>& moves
     ) const;
 
+    void generateEnPassantMoves(
+        const Board& board,
+        const GameState& gameState,
+        std::vector<Move>& moves
+    ) const;
+
+    void generatePromotionMoves(
+        const Board& board,
+        const GameState& gameState,
+        std::vector<Move>& moves
+    ) const;
+
+    // Knight
     void generateKnightMoves(
         const Board& board,
         const GameState& gameState,
         std::vector<Move>& moves
     ) const;
 
+    // Bishop
     void generateBishopMoves(
         const Board& board,
         const GameState& gameState,
         std::vector<Move>& moves
     ) const;
 
+    // Rook
     void generateRookMoves(
         const Board& board,
         const GameState& gameState,
         std::vector<Move>& moves
     ) const;
 
+    // Queen
     void generateQueenMoves(
         const Board& board,
         const GameState& gameState,
         std::vector<Move>& moves
     ) const;
 
+    // King
     void generateKingMoves(
         const Board& board,
         const GameState& gameState,
@@ -78,6 +96,7 @@ private:
         std::vector<Move>& moves
     ) const;
 
+    // Shared helper for bishop, rook and queen
     void addSlidingMoves(
         const Board& board,
         const GameState& gameState,

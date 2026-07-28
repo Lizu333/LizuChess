@@ -1,8 +1,10 @@
 ﻿#pragma once
 
 #include <SFML/Graphics.hpp>
+
 #include <vector>
 
+#include "../engine/pieces/Piece.h"
 #include "../engine/position/Position.h"
 
 class Board;
@@ -20,11 +22,15 @@ public:
         const Position& selectedSquare,
         bool hasLastMove,
         const Position& lastMoveFrom,
-        const Position& lastMoveTo
+        const Position& lastMoveTo,
+        bool promotionPending,
+        PieceColor promotionColor
     );
 
 private:
-    void drawBoard(sf::RenderWindow& window);
+    void drawBoard(
+        sf::RenderWindow& window
+    );
 
     void drawLastMove(
         sf::RenderWindow& window,
@@ -44,7 +50,21 @@ private:
         const std::vector<Position>& highlightedSquares
     );
 
-    void drawPieces(sf::RenderWindow& window, const Board& board);
+    void drawPieces(
+        sf::RenderWindow& window,
+        const Board& board
+    );
+
+    void drawPromotionPanel(
+        sf::RenderWindow& window,
+        bool promotionPending,
+        PieceColor promotionColor
+    );
+
+    std::wstring getPieceSymbol(
+        PieceType type,
+        PieceColor color
+    ) const;
 
 private:
     sf::Font font;
